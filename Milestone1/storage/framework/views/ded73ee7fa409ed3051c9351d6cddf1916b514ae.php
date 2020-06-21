@@ -1,6 +1,7 @@
 <html>
     <head>
-        <title>App Name - <?php echo $__env->yieldContent('title'); ?></title>
+        <title>Socialis - <?php echo $__env->yieldContent('title'); ?></title>
+        <?php echo $__env->yieldContent('head'); ?>
     </head>
     <body>
         <?php echo $__env->yieldContent('navbar', View::make('_header')); ?>

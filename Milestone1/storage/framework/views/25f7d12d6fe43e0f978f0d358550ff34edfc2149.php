@@ -1,10 +1,19 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: David Pratt Jr
- * Date: 6/13/2020
- * Time: 3:23 PM
- */
+/*
+    Project:
+        Socialis: V1.0
+    Module:
+        Socialis: V1.0
+    Author:
+        David Pratt Jr.
+    Date:
+        6/14/2020
+    Synopsis:
+        Show user information
+
+
+*/
+
 ?>
 
 
@@ -12,33 +21,90 @@
 
 
 <?php $__env->startSection('content'); ?>
-    <div class="m-4">
-        <h3>User: </h3>
-        <div class="form-row">
-            <div class="form-group my-3 col-5">
-                <label for="firstname">First Name</label>
-                <input type="text" class="form-control" id="firstname" value="<?php echo e($user->firstname); ?>" readonly>
-            </div>
-            <div class="form-group my-3 col-5">
-                <label for="lastname">Last Name</label>
-                <input type="text" class="form-control" id="lastname" value="<?php echo e($user->lastname); ?>" readonly>
-            </div>
+    <?php if($users->count() > 0): ?>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>User ID</th>
+                <th>Name</th>
+                <th>Username</th>
+                <th>Age</th>
+                <th>User Since</th>
+                <th>Admin?</th>
+                <th>Active?</th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php for($i = 0; $i < $demographics->count(); $i++): ?>
+                <tr>
+                    <td><?php echo e($users->get($i)->id); ?></td>
+                    <td><?php echo e($users->get($i)->firstname . " " . $users->get($i)->lastname); ?></td>
+                    <td><?php echo e($users->get($i)->username); ?></td>
+                    <td><?php echo e($demographics->get($i)->age); ?></td>
+                    <td><?php echo e($users->get($i)->created_at->format('m-d-Y H:i:s')); ?></td>
+                    <td><?php if($users->get($i)->isAdmin): ?> Yes <?php else: ?> No <?php endif; ?></td>
+                    <td><?php if($users->get($i)->isActive): ?> Yes <?php else: ?> No <?php endif; ?></td>
+                    <td>
+                        <?php if($users->get($i)->isActive): ?>
+                        <form action="<?php echo e(url('/users/suspend')); ?>" method="POST">
+                            <?php echo csrf_field(); ?>
+                            <?php echo method_field('PATCH'); ?>
+                            <input type="hidden" name="userID" value="<?php echo e($users->get($i)->id); ?>">
+                            <input type="submit" class="btn btn-outline-warning" value="Suspend" >
+                        </form>
+                        <?php else: ?>
+                        <form action="<?php echo e(url('/users/reactivate')); ?>" method="POST">
+                            <?php echo csrf_field(); ?>
+                            <input type="hidden" name="userID" value="<?php echo e($users->get($i)->id); ?>">
+                            <input type="submit" class="btn btn-outline-success" value="Reactivate">
+                        </form>
+                        <?php endif; ?>
+                    </td>
+                    <td>
+                        <?php if($users->get($i)->isAdmin): ?>
+                        <form action="<?php echo e(url('/users/admin')); ?>" method="POST">
+                            <?php echo csrf_field(); ?>
+                            <input type="hidden" name="userID" value="<?php echo e($users->get($i)->id); ?>">
+                            <input type="submit" class="btn btn-outline-warning" value="No Admin">
+                        </form>
+                        <?php else: ?>
+                        <form action="<?php echo e(url('/users/admin')); ?>" method="POST">
+                            <?php echo csrf_field(); ?>
+                            <?php echo method_field('PATCH'); ?>
+                            <input type="hidden" name="userID" value="<?php echo e($users->get($i)->id); ?>">
+                            <input  type="submit" class="btn btn-outline-success" value="To Admin">
+                        </form>
+                        <?php endif; ?>
+                    </td>
+                    <td>
+                        <form action="<?php echo e(url('/users/delete')); ?>" method="POST">
+                            <?php echo csrf_field(); ?>
+                            <?php echo method_field('delete'); ?>
+                            <input type="hidden" name="userID" value="<?php echo e($users->get($i)->id); ?>">
+                            <input type="submit" class="btn btn-outline-danger" value="Delete">
+                        </form>
+                    </td>
+                    <td>
+                        <a href="<?php echo e(url('/profile/' . $users->get($i)->id . '/view')); ?>" class="btn btn-primary">View</a>
+                    </td>
+                </tr>
+            <?php endfor; ?>
+        </tbody>
+    </table>
+    <?php if($demographics->count() < $users->count()): ?>
+        <div class="d-flex justify-content-center">
+            <h3 class="bg-warning">It looks like some users have not activated their accounts by creating profiles yet</h3>
         </div>
-        <div class="form-row">
-            <div class="form-group my-3 col-4">
-                <label for="username">Username</label>
-                <input class="form-control" type="text" id="username" value="<?php echo e($user->username); ?>" readonly>
-            </div>
-            <div class="form-group my-3 col-4">
-                <label for="password">Password</label>
-                <input type="text" class="form-control" id="password" value="<?php echo e($user->password); ?>" readonly>
-            </div>
-            <div class="form-group my-3 col-2">
-                <label for="isAdmin">Admin?</label>
-                <input type="text" class="form-control" id="" value="<?php if($user->isAdmin) echo "Yes"; else echo "No";?>" readonly>
-            </div>
+    <?php endif; ?>
+    <?php else: ?>
+        <div class="col bg-danger text-white d-flex justify-content-center">
+            <h2>No Users Added yet</h2>
+        </div>
 
-        </div>
-    </div>
+    <?php endif; ?>
 <?php $__env->stopSection(); ?>
 <?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\MAMP\htdocs\Milestone1\resources\views/users.blade.php ENDPATH**/ ?>
