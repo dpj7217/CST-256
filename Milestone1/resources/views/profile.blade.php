@@ -79,16 +79,15 @@
 
 
 @section('content')
-    <div style="margin-top: 30px">
+    <div style="margin-top: 30px"></div>
         <div class="row">
+        @if (!$profile)
+            <div>
+                <h5>Looks like you haven't finished your profile yet.</h5>
+                <a href="{{url('/profile/' . $user->id . '/create')}}" class="btn btn-primary">Create One</a>
+            </div>
 
-            @if (!$profile)
-                <div>
-                    <h5>Looks like you haven't finished your profile yet.</h5>
-                    <a href="{{url('/profile/' . $user->id . '/create')}}" class="btn btn-primary">Create One</a>
-                </div>
-
-            @else
+        @else
             <div class="profilePicture">
                 <img src="/Milestone1/public/storage/{{$demographics->profileImageLocation}}" alt="{{$user->username}}'s profile picture">
             </div>
@@ -118,7 +117,6 @@
             </div>
 
         </div>
-
 
         <div class="row">
 
@@ -160,16 +158,72 @@
                 <p>{{$demographics->birthday}}</p>
             </div>
         </div>
-    </div>
-
-
-    <div class="row">
-
-
-        <div class="col-4">
-
-        </div>
-
-    </div>
     @endif
+
+    <h3>Work History</h3>
+    @forelse($workHistory as $job)
+        <div class="form-row">
+            <div class="form-group col">
+                <label for="companyName">Company Name</label>
+                <input type="text" class="form-control" id="companyName" value="{{$job->companyName}}" disabled>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-6">
+                <label for="from">From</label>
+                <input type="date" id="from" class="form-control" value="{{$job->from}}" disabled>
+            </div>
+            <div class="form-group col-6">
+                <label for="to">To</label>
+                <input type="date" id="to" class="form-control" value="{{$job->to}}" disabled>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col">
+                <label for="description">Description</label>
+                <textarea id="description" class="form-control" rows="6" disabled>{{$job->description}}</textarea>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-check">
+                <input type="checkbox" id="isCurrent" class="form-check-input" {{$job->isCurrent ? 'checked' : ''}}>
+                <label class="form-check-label" for="isCurrent">I Currently Work Here</label>
+            </div>
+        </div>
+        <br><br>
+    @empty
+        <div>
+            <h5>Looks like you haven't finished your work history yet</h5>
+            <a href="{{url('/profile/' . $user->id . '/workHistory')}}">Add work History</a>
+        </div>
+    @endforelse
+
+    <h3>Education History</h3>
+    @forelse($educationHistory as $education)
+        <div class="form-row">
+            <div class="form-group col">
+                <label for="institutionName">Institution Name</label>
+                <input type="text" id="institutionName" class="form-control" value="{{$education->institutionName}}" disabled>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-6">
+                <label for="from">From</label>
+                <input type="date" id="from" class="form-control" value="{{$education->from}}" disabled>
+            </div>
+            <div class="form-group col-6">
+                <label for="to">To</label>
+                <input type="date" class="form-control" id="to" value="{{$education->to}}" disabled>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col">
+                <label for="major">Major</label>
+                <input type="text" id="major" class="form-control" value="{{$education->major}}" disabled>
+            </div>
+        </div>
+    @empty
+        <h5>Looks like you haven't finished your education history yet</h5>
+        <a href="{{url('/profile/' . $user->id . '/educationHistory')}}">Add education history</a>
+    @endforelse
 @endsection

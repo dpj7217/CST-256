@@ -4,9 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class educationHistory extends Model
+class job extends Model
 {
-    protected $guarded = [];
 
+    protected $guarded = [];
     //
 }

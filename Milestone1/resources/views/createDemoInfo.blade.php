@@ -40,6 +40,7 @@
 
 @section('content')
     <div style="margin: 30px 0px">
+        <?php $error = session('error')?>
         @if(isset($error))
             <div class="col bg-danger text-white">
                     <h3>{{$error}}</h3>
@@ -191,7 +192,7 @@
             <input type="hidden" value="{{$userID}}" name="userID" id="userID">
 
 
-            <input type="submit" class="button col-3" value="Finish">
+            <input type="submit" class="button col-3" value="Move on to Job History">
         </form>
     </div>
 @endsection

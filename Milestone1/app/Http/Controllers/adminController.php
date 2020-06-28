@@ -23,7 +23,7 @@ class adminController extends Controller
 
         $user = User::where('id', $userID)->first();
         $user->isActive = 0;
-        $user->update();
+
 
         $users = User::latest()->get();
         $demographics = Demographics::latest()->get();

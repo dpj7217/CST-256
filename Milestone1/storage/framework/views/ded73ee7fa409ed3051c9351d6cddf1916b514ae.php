@@ -1,6 +1,9 @@
 <html>
     <head>
         <title>Socialis - <?php echo $__env->yieldContent('title'); ?></title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+        <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
         <?php echo $__env->yieldContent('head'); ?>
     </head>
     <body>

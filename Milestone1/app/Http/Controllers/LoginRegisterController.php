@@ -61,23 +61,17 @@ class LoginRegisterController extends Controller
 
 
         /*Create new user, set attributes, save to DB*/
-        $user = new \App\user();
+        $user = \App\user::create([
+            'firstname' => request('firstname'),
+            'lastname' => request('lastname'),
+            'email' => request('email'),
+            'username' => request('username'),
+            'password' => request('password'),
+            'isAdmin' => 0,
+            'isActive' => 1
+        ]);
 
-        $user->firstname = request('firstname');
-        $user->lastname = request('lastname');
-        $user->email = request('email');
-        $user->username = request('username');
-        $user->password = request('password');
-        $user->isAdmin = 0; //initially set to false can be changed by admin on all users page
-        $user->isActive = 1; //initially set to active (true) but user can be suspended from /admin/users route
-
-        $user->save();
-
-        $userID = DB::table('users')->where('username', request('username'))->where('password', request('password'))->first();
-        $_SESSION['userID'] = $userID->id;
-
-        return redirect('/profile/' . $userID->id . '/create');
-;
+        return redirect('/profile/' . $user->id . '/create');
     }
 
     public function show() {

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateProfilesTable extends Migration
+class CreateEducationHistoriesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,12 @@ class CreateProfilesTable extends Migration
      */
     public function up()
     {
-        Schema::create('profiles', function (Blueprint $table) {
+        Schema::create('education_histories', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('userID', false, true)->unique();
+            $table->bigInteger('profileID', false, true);
             $table->timestamps();
 
-            $table->index('userID');
-            $table->foreign('userID')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('profileID')->references('id')->on('profiles')->onDelete('cascade');
         });
     }
 
@@ -30,6 +29,6 @@ class CreateProfilesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('profiles');
+        Schema::dropIfExists('education_histories');
     }
 }
