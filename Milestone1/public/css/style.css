@@ -1,0 +1,96 @@
+a {
+    text-decoration: inherit;
+    color: inherit;
+    cursor: auto;
+}
+
+.sidebar {
+    height: 100%;
+    width: 10%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    color: white;
+    background-color: #012f53;
+    overflow-x: hidden;
+    padding-top: 20px;
+}
+
+#logo {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.navitem {
+    color: white;
+    text-decoration: none;
+    font-family: "Lucida Sans", "monospace", sans-serif;
+    padding: 30px;
+    display: block;
+    text-align: center;
+    font-size: 15px;
+}
+
+.navitem:hover {
+    cursor: pointer;
+    text-decoration: none;
+    background-color: white;
+    color: #012f53;
+}
+
+.activeNavItem {
+    margin: 10px;
+    color: #012f53;
+    background-color: white;
+    border-radius: 40px;
+}
+
+#wrapper {
+    margin-left: 10%;
+    padding: 0px 10px;
+}
+
+.button {
+    height: 4%;
+    background-color: #0f3b0f;
+    color: white;
+}
+
+.button:hover {
+    background-color: white;
+    border: 1px solid #0f3b0f;
+    color: #0f3b0f;
+}
+
+.my-card-group {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+}
+
+.my-card {
+    display: flex;
+    flex-direction: column;
+    width: 33%;
+    min-width: 0px;
+    border: 1px solid rgba(0,0,0,.125);
+}
+
+.my-card-image {
+    height: 10rem;
+    width: 100%;
+    background-color: grey;
+    display: block;
+}
+
+.my-card-body {
+    padding: 1.25rem;
+    background-color: white;
+    flex: 1 1 auto;
+    font-size: 15px
+}
+
+.my-card-footer {
+    background-color: lightgrey;
+}

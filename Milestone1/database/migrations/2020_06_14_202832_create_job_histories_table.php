@@ -15,10 +15,11 @@ class CreateJobHistoriesTable extends Migration
     {
         Schema::create('job_histories', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('profileID', false, true);
+            $table->bigInteger('profile_id', false, true)->unique();
             $table->timestamps();
 
-            $table->foreign('profileID')->references('id')->on('profiles')->onDelete('cascade');
+            $table->index('profile_id');
+            $table->foreign('profile_id')->references('id')->on('profiles')->onDelete('cascade');
         });
     }
 

@@ -15,7 +15,7 @@ class CreateEducationHistoriesDetailsTable extends Migration
     {
         Schema::create('education_histories_details', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('educationHistoryID', false, true);
+            $table->bigInteger('education_histories_id', false, true);
             $table->string('institutionName');
             $table->string('major');
             $table->boolean('current')->nullable();
@@ -23,7 +23,7 @@ class CreateEducationHistoriesDetailsTable extends Migration
             $table->date('to');
             $table->timestamps();
 
-            $table->foreign('educationHistoryID')->references('id')->on('education_histories')->onDelete('cascade');
+            $table->foreign('education_histories_id')->references('id')->on('education_histories')->onDelete('cascade');
         });
     }
 

@@ -1,18 +1,17 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <a class="navbar-brand" href="/Milestone1/">Socialis</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
+<div class="sidebar">
+    <img class="logo" src="{{asset('storage/images/logo.png')}}" height="10%" id="logo">
+    <div style="margin-top: 30px">
 
-  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" href="/Milestone1/">Home <span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item">
-        <a id="login" class="nav-link" href="/Milestone1/loginRegister">Login or Register</a>
-        <a id="logout" class="nav-link" href="/Milestone1/logoutHandler.php">Logout</a>
-      </li>
-    </ul>
-  </div>
-</nav>
+        <a href="{{url('/home')}}" class="navitem {{Request::path() === '/' ? 'activeNavItem' : ''}}">HOME</a>
+        @auth
+            <a href="{{url('/logout')}}" class="navitem">LOGOUT</a>
+        @else
+            <a href="{{url('/login')}}" class="navitem {{Request::path() === 'login' ? 'activeNavItem' : ''}}">LOGIN</a>
+            <a href="{{url('/register')}}" class="navitem {{Request::path() === 'register' ? 'activeNavItem' : ''}}">REGISTER</a>
+        @endauth
+        <a href="{{url('/jobs')}}" class="navitem {{Request::path() === 'jobs' ? 'activeNavItem' : ''}}">JOBS</a>
+        <a href="{{url('/groups')}}" class="navitem {{Request::path() === 'groups' ? 'activeNavItem' : ''}}">GROUPS</a>
+    </div>
+</div>
+
+

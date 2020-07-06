@@ -9,15 +9,16 @@ use \App\Profile;
 use \App\Demographics;
 use \App\jobHistories;
 use \App\jobHistoriesDetails;
-use \App\educationHistory;
+use \App\educationHistories;
 use \App\educationHistoriesDetails;
 use Illuminate\Support\Facades\Validator;
-use Symfony\Component\Console\Input\Input;
+use Intervention\Image\ImageManagerStatic as Image;
+
 
 class ProfileController extends Controller
 {
     public function create($userID) {
-        if ($result = Profile::where('userID', $userID)->first()) {
+        if ($result = Profile::where('user_id', $userID)->first()) {
             return redirect('/profile/' . $userID . "/edit");
         }
 
@@ -27,15 +28,15 @@ class ProfileController extends Controller
     }
 
     public function showWorkHistory($userID) {
-        if (!(Profile::where('userID', $userID))) {
+        if (!(Profile::where('user_id', $userID))) {
             return redirect('/profile/' . $userID . '/create')->with('error', "Please submit demographic information before entering job history");
         }
 
         //if you've already submitted
-        if (jobHistories::where('profileID', function($query) use ($userID) {
-            $query->select('id')->from('profiles')->where('userID', $userID);
+        if (jobHistories::where('profile_id', function($query) use ($userID) {
+            $query->select('id')->from('profiles')->where('user_id', $userID);
         })->first()) {
-            return redirect('/profile/' . $userID . "/educationHistory");
+            return redirect('/profile/' . $userID . "/educationHistories");
         } else {
             return view('createWorkHistory', [
                 'userID' => $userID
@@ -44,12 +45,12 @@ class ProfileController extends Controller
     }
 
     public function showEducationHistory($userID) {
-       if (!(Profile::where('userID', $userID))) {
+       if (!(Profile::where('user_id', $userID))) {
            return redirect('/profile/' . $userID . "/create")->with('error', "Please submit demographic information before entering education history");
        }
 
-       if (educationHistory::where('profileID', function($query) use ($userID){
-           $query->select('id')->from('profiles')->where('userID', $userID);
+       if (educationHistories::where('profile_id', function($query) use ($userID){
+           $query->select('id')->from('profiles')->where('user_id', $userID);
        })->first()) {
            return redirect('/profile/' . $userID . '/view');
        } else {
@@ -60,22 +61,14 @@ class ProfileController extends Controller
     }
 
     public function show($userID) {
-        return view('profile', [
+        return view('profile/profile', [
             'user' => User::find($userID),
-            'profile' => Profile::where('userID', $userID)->first(),
-            'demographics' => \App\Demographics::where('profileID', function($query) use ($userID) {
-                $query->select('id')->from('profiles')->where('userID', $userID);
-            })->first(),
-            'educationHistory' => educationHistoriesDetails::where('educationHistoryID', function($query) use ($userID) {
-                $query->select('id')->from('education_histories')->where('profileID', function($query) use ($userID) {
-                    $query->select('id')->from('profiles')->where('userID', $userID);
-                });
-            })->get(),
-            'workHistory' => jobHistoriesDetails::where('jobHistoryID', function($query) use ($userID) {
-                $query->select('id')->from('job_histories')->where('profileID', function($query) use ($userID){
-                   $query->select('id')->from('profiles')->where('userID', $userID);
-                });
-            })->get()
+            'profile' => User::where('id', $userID)->first()->profile,
+            'demographics' => User::where('id', $userID)->first()->profile->demographics,
+            'educationHistories' => User::where('id', $userID)->first()->profile->educationHistories->educationHistoriesDetails,
+            'workHistory' => User::where('id', $userID)->first()->profile->jobHistories->jobHistoriesDetails,
+            'groups' => User::where('id', $userID)->first()->groups,
+            'userID' => $userID
         ]);
     }
 
@@ -84,7 +77,7 @@ class ProfileController extends Controller
 
 
 
-    public function addDemographics($userID) {
+    public function addDemographics($userID, Request $request) {
         /*validate user input*/
         request()->validate([
             'birthday' => ['required', 'before:tomorrow'],
@@ -94,7 +87,8 @@ class ProfileController extends Controller
             'gender' => ['required'],
             'ethnicity' => ['required'],
             'age' =>['required'],
-            'inputFile' => ['required', 'file']
+            'profileImage' => ['required', 'file'],
+            'bannerImage' => ['required', 'file']
         ]);
 
 
@@ -102,10 +96,19 @@ class ProfileController extends Controller
         \DB::beginTransaction();
 
 
-        $avatarPath = request('inputFile')->storeAs('images', $userID . "_img.jpg");
+        $bannerImage = $request->file('bannerImage');
+        $bannerImage = Image::make($bannerImage->getRealPath());
+        $bannerImage->resize(1115, null, function($constraint) {$constraint->aspectRatio();})->encode('jpg', 100);
+        \Storage::disk('public')->put('images/'. $userID . '_bannerImg.jpg', $bannerImage);
+
+        $profileImage = $request->file('profileImage');
+        $profileImage = Image::make($profileImage->getRealPath());
+        $profileImage->resize(100, null, function($constraint) {$constraint->aspectRatio();})->encode('jpg', 100);
+        \Storage::disk('public')->put('images/' . $userID . '_profileImg.jpg', $profileImage);
+
 
         $profile = Profile::create([
-            'userID' => request('userID')
+            'user_id' => request('userID')
         ]);
 
         if (!$profile) {
@@ -115,7 +118,7 @@ class ProfileController extends Controller
 
 
         $demographics = Demographics::create([
-            'profileID' => $profile->id,
+            'profile_id' => $profile->id,
             'birthday' => request('birthday'),
             'currentCity' => request('currCity'),
             'fromCity' => request('fromCity'),
@@ -123,7 +126,8 @@ class ProfileController extends Controller
             'gender' => request('gender'),
             'race' => request('ethnicity'),
             'age' => request('age'),
-            'profileImageLocation' => $avatarPath
+            'profileImageLocation' => 'images/' . $userID . '_profileImg.jpg',
+            'bannerImageLocation' => 'images/'. $userID . '_bannerImg.jpg'
         ]);
 
 
@@ -143,12 +147,12 @@ class ProfileController extends Controller
 
 
 
-    public function addWorkHistory($userID, Request $request) {
+    public function addWorkHistory($userID) {
         if (request('numElements') < 1) {
             return redirect()->back()->with('error', 'At least one work history element required');
         }
 
-        if (!(Profile::where('userID', $userID)->first()))
+        if (!(Profile::where('user_id', $userID)->first()))
             return redirect('/profile/' . $userID . "/create")->with('error', 'Please create a profile first');
 
 
@@ -177,7 +181,7 @@ class ProfileController extends Controller
         }
 
         $jobHistory = jobHistories::create([
-            'profileID' => Profile::where('userID', $userID)->first()->id
+            'profile_id' => \Auth::user()->id
         ]);
 
         $isCurrent = 0;
@@ -187,7 +191,7 @@ class ProfileController extends Controller
 
         for ($i = 1; $i <= request('numElements'); $i++) {
             $jobHistoryDetails = jobHistoriesDetails::create([
-                'jobHistoryID' => $jobHistory->id,
+                'job_histories_id' => $jobHistory->id,
                 'companyName' => request('companyName_' . $i),
                 'from' => request('from_' . $i),
                 'to' => request('to_' . $i),
@@ -197,16 +201,19 @@ class ProfileController extends Controller
             ]);
         }
 
-        return redirect('/profile/' . $userID . '/educationHistory');
+        return redirect('/profile/' . $userID . '/educationHistories');
     }
+
+
+
 
     public function addEducationHistory($userID) {
         if (request('numElements') < 1) {
             return redirect()->back()->with('error', "At least one education element is required");
         }
 
-        if (!(jobHistories::where('profileID', function($query) use ($userID) {
-            $query->select('id')->from('profiles')->where('userID', $userID);
+        if (!(jobHistories::where('profile_id', function($query) use ($userID) {
+            $query->select('id')->from('profiles')->where('user_id', $userID);
         })))
             return redirect('/profile/' . $userID . '/workHistory')->with('error', "You must submit job history before you submit education history");
 
@@ -232,13 +239,13 @@ class ProfileController extends Controller
             }
         }
 
-        $educationHistory = educationHistory::create([
-            'profileID' => Profile::where('userID', $userID)->first()->id
+        $educationHistory = educationHistories::create([
+            'profile_id' => Profile::where('user_id', $userID)->first()->id
         ]);
 
         for($i = 1; $i <= request('numElements'); $i++) {
             educationHistoriesDetails::create([
-                'educationHistoryID' => $educationHistory->id,
+                'education_histories_id' => $educationHistory->id,
                 'institutionName' => request('institutionName_' . $i),
                 'from' => request('from_' . $i),
                 'to' => request('to_' . $i),

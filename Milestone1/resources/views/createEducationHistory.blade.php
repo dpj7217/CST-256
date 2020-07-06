@@ -14,22 +14,6 @@
         #submitButton {
             width: 30%;
         }
-
-        .button {
-            height: 3rem;
-            box-shadow: none;
-            background-color: white;
-            border: dashed 1px rgb(0, 149, 255);
-            width: 20%;
-        }
-
-        .button:hover {
-            background-color: rgb(0, 149, 255);
-        }
-
-        .button:focus {
-            border: dashed 1px rgb(0, 149, 255);
-        }
     </style>
     <script>
         function rename(elementName, numElements) {
@@ -93,7 +77,7 @@
 
 @section('content')
     <h1>Enter your educational history</h1>
-    <form id="educationHistoryForm" action="{{url('/profile/' . $userID . "/educationHistory")}}" method="post">
+    <form id="educationHistoryForm" action="{{url('/profile/' . $userID . "/educationHistories")}}" method="post">
         @csrf
 
         @for($i = 1; $i <= session('numElements'); $i++)

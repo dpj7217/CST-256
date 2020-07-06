@@ -179,14 +179,29 @@
 
 
             <div class="form-row">
+
+
                 <div class="form-group col-3">
-                    <label {{ $errors->has('inputFile') ? 'style=color:#dc3545;' : '' }} for="inputFile" id="inputFileLabel">Upload Profile Picture</label>
-                    <input type="file" {{ $errors->has('inputFile') ? 'class="border border-danger"' : '' }} name="inputFile" id="inputFile">
+                    <label {{ $errors->has('profileImage') ? 'style=color:#dc3545;' : '' }} for="profileImage" id="inputFileLabel">Upload Profile Picture</label>
+                    <input type="file" {{ $errors->has('inputFile') ? 'class="border border-danger"' : '' }} name="profileImage" id="profileImage">
                 </div>
-                @if ($errors->has('inputFile'))
-                    <p class="text-danger">{{$errors->first('inputFile')}}</p>
+                @if ($errors->has('profileImage'))
+                    <p class="text-danger">{{$errors->first('profileImage')}}</p>
+                @endif
+
+
+                <div class="form-group col-3">
+                    <label {{$errors->has('bannerImage') ? 'style=color:#dc3545;' : ''}} for="bannerImage" id="bannerImageLabel">Upload Banner Image</label>
+                    <input type="file" {{$errors->has('bannerImage') ? 'class="border border-danger"' : ''}} name="bannerImage" id="bannerImage">
+                </div>
+                @if ($errors->has('bannerImage'))
+                    <p class="text-danger">{{$errors->first('bannerImage')}}</p>
                 @endif
             </div>
+
+
+
+
 
 
             <input type="hidden" value="{{$userID}}" name="userID" id="userID">

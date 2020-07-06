@@ -15,10 +15,10 @@ class CreateEducationHistoriesTable extends Migration
     {
         Schema::create('education_histories', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('profileID', false, true);
+            $table->bigInteger('profile_id', false, true);
             $table->timestamps();
 
-            $table->foreign('profileID')->references('id')->on('profiles')->onDelete('cascade');
+            $table->foreign('profile_id')->references('id')->on('profiles')->onDelete('cascade');
         });
     }
 

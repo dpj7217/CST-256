@@ -29,4 +29,19 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function profile() {
+        return $this->hasOne(profile::class);
+    }
+
+    public function groups() {
+        return $this->belongsToMany(Group::class);
+    }
+
+    public function isAdmin() {
+        if ($this->isAdmin)
+            return true;
+
+        return false;
+    }
 }

@@ -15,8 +15,9 @@ class CreateDemographicsTable extends Migration
     {
         Schema::create('demographics', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('profileID', false, true);
+            $table->bigInteger('profile_id', false, true);
             $table->string('profileImageLocation');
+            $table->string('bannerImageLocation');
             $table->integer('age');
             $table->string('gender')->nullable();
             $table->string('race')->nullable();
@@ -26,7 +27,7 @@ class CreateDemographicsTable extends Migration
             $table->text('bio');
             $table->timestamps();
 
-            $table->foreign('profileID')->references('id')->on('profiles')->onDelete('cascade');
+            $table->foreign('profile_id')->references('id')->on('profiles')->onDelete('cascade');
         });
     }
 

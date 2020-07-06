@@ -15,7 +15,7 @@ class CreateJobHistoriesDetailsTable extends Migration
     {
         Schema::create('job_histories_details', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('jobHistoryID', false, true);
+            $table->bigInteger('job_histories_id', false, true);
             $table->string('companyName');
             $table->string('role');
             $table->text('description');
@@ -24,7 +24,7 @@ class CreateJobHistoriesDetailsTable extends Migration
             $table->date('to');
             $table->timestamps();
 
-            $table->foreign('jobHistoryID')->references('id')->on('job_histories')->onDelete('cascade');
+            $table->foreign('job_histories_id')->references('id')->on('job_histories')->onDelete('cascade');
         });
     }
 

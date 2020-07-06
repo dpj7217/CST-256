@@ -24,6 +24,14 @@ use DB;
 
 class LoginRegisterController extends Controller
 {
+    public function showLogin() {
+        return view('login');
+    }
+
+    public function showRegister() {
+        return view('register');
+    }
+
     public function login() {
         request()->validate([
             'loginUsername' => ['required', 'max:255'],

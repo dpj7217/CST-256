@@ -8,22 +8,6 @@
         #submitButton {
             width: 30%;
         }
-
-        .button {
-            height: 3rem;
-            box-shadow: none;
-            background-color: white;
-            border: dashed 1px rgb(0, 149, 255);
-            width: 20%;
-        }
-
-        .button:hover {
-            background-color: rgb(0, 149, 255);
-        }
-
-        .button:focus {
-            border: dashed 1px rgb(0, 149, 255);
-        }
     </style>
 
     <script>
@@ -194,9 +178,9 @@
     </div>
 
 
-    <button id="deleteButton" class="button">Delete Last History</button>
-    <button id="submitButton" form="historyForm" class="button">Move on to Education History</button>
-    <button id="addButton" class="button">Add</button>
+    <button id="deleteButton" class=" btn button">Delete Last History</button>
+    <button id="submitButton" form="historyForm" class=" btn button">Move on to Education History</button>
+    <button id="addButton" class="btn button">Add</button>
 
 
 @endsection
