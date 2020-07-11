@@ -10,9 +10,17 @@ use Intervention\Image\ImageManagerStatic as Image;
 class GroupController extends Controller
 {
     public function index() {
+        $user = null;
+        $userGroups = null;
+
+        if (\Auth::user()) {
+            $user = \Auth::user();
+            $userGroups = \Auth::user()->groups;
+        }
+
         return view('groups/groups', [
-            'user' => \Auth::user(),
-            'userGroups' => \Auth::user()->groups,
+            'user' => $user,
+            'userGroups' => $userGroups,
             'groups' => Group::latest()->get()
         ]);
         //TODO Attach groups based on tags of user

@@ -38,10 +38,20 @@ class User extends Authenticatable
         return $this->belongsToMany(Group::class);
     }
 
+    public function jobs() {
+        return $this->hasMany(Job::class);
+    }
+
+    public function company() {
+        return $this->hasMany(Company::class);
+    }
+
     public function isAdmin() {
         if ($this->isAdmin)
             return true;
 
         return false;
     }
+
+
 }

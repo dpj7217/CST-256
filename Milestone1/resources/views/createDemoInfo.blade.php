@@ -13,16 +13,6 @@
 
 @section('head')
 <style>
-    .button {
-        background: white;
-        border: 1px dashed blue;
-        height: 45px;
-    }
-
-    .button:hover {
-        background-color: lightblue;
-    }
-
     input[type="number"]::-webkit-inner-spin-button,
     input[type="number"]::-webkit-outer-spin-button
     {
@@ -39,7 +29,7 @@
 @endsection
 
 @section('content')
-    <div style="margin: 30px 0px">
+    <div style="margin: 30px 0px; height: fit-content">
         <?php $error = session('error')?>
         @if(isset($error))
             <div class="col bg-danger text-white">
@@ -207,7 +197,7 @@
             <input type="hidden" value="{{$userID}}" name="userID" id="userID">
 
 
-            <input type="submit" class="button col-3" value="Move on to Job History">
+            <input type="submit" class="btn button" value="Move on to Job History">
         </form>
     </div>
 @endsection

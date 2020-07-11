@@ -11,97 +11,7 @@
 
 @section('head')
     <style>
-        .banner {
-            width: inherit;
-            height: 45%;
-            overflow: hidden;
-            border-bottom: 3px solid black;
-        }
 
-        .profile {
-            height: 250px;
-            width: 250px;
-            border-radius: 250px;
-            border: 1px solid black;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: auto;
-            position: absolute;
-            background-color: white;
-            left: 45%;
-            top: 30%;
-            z-index: 3;
-        }
-
-        .profileNavBar {
-            width: inherit;
-            display: flex;
-            justify-content: center;
-            background-color: #0f3b0f;
-            color: white;
-            font-family: "Lucida Sans", "monospace", sans-serif;
-            font-size: 15px;
-            height: 5%;
-        }
-
-        .profileNavItem {
-            width: 20%;
-            text-align: center;
-            height: 100%;
-            align-items: center;
-        }
-
-        .profileNavItem:hover {
-            color: #0f3b0f;
-            background-color: white;
-            padding: auto;
-        }
-
-        .button {
-            height: 4%;
-            background-color: #0f3b0f;
-            color: white;
-        }
-
-        .button:hover {
-            background-color: white;
-            border: 1px solid #0f3b0f;
-            color: #0f3b0f;
-        }
-
-        .my-card-group {
-            display: flex;
-            flex-flow: row wrap;
-            justify-content: space-between;
-        }
-
-        .my-card {
-            display: flex;
-            flex-direction: column;
-            width: 33%;
-            min-width: 0px;
-            border: 1px solid rgba(0,0,0,.125);
-        }
-
-        .my-card-image {
-            height: 10rem;
-            width: 100%;
-            background-color: grey;
-            display: block;
-        }
-
-        .my-card-body {
-            padding: 1.25rem;
-            background-color: white;
-            flex: 1 1 auto;
-            font-size: 15px
-        }
-
-        .my-card-footer {
-            background-color: lightgrey;
-        }
 
         #name {
             margin-top: 15%;
@@ -161,7 +71,7 @@
     </div>
 
     <!-- GROUPS SECTION -->
-    <div id="groups_section" >
+    <div id="groups_section" class="section">
 
         @foreach($groups->chunk(3) as $chunk)
         <div class="my-card-group">
@@ -184,24 +94,7 @@
             <a href="{{url('/groups')}}" class="btn button">Join a new Group</a>
         </div>
     </div>
-        {{--<div class="card-group" style="margin: 15px;">--}}
-            {{--@forelse($groups->chunk(3) as $chunk)--}}
-                {{--@foreach($chunk as $group)--}}
-                    {{--<div class="card">--}}
-                        {{--<img class="card-img-top" src="..." alt="Card image cap">--}}
-                        {{--<div class="card-body">--}}
-                            {{--<h5 class="card-title">Card title</h5>--}}
-                            {{--<p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>--}}
-                            {{--<p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>--}}
-                        {{--</div>--}}
-                    {{--</div>--}}
-                {{--@endforeach--}}
-            {{--@empty--}}
-                {{--@if(\Auth::User()->id === $userID)--}}
-                    {{--<h1>Join or create a new group to see it listed here</h1>--}}
-                {{--@endif--}}
-            {{--@endforelse--}}
-        {{--</div>--}}
+
 
 
 

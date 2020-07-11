@@ -73,8 +73,13 @@ Route::post('/users/admin', 'adminController@fromAdmin')->middleware('can:access
 Route::get('/jobs', 'jobsController@show')->middleware('auth');
 Route::get('/admin/jobs/add', 'jobsController@showAdd')->middleware('can:access');
 Route::post('/admin/jobs/add', 'jobsController@addJob')->middleware('can:access');
+Route::get('/admin/jobs/{jobID}/edit', 'jobsController@showEditJob')->middleware('can:access');
 Route::patch('/admin/jobs/{jobID}/edit', 'jobsController@editJob')->middleware('can:access');
 Route::get('/jobs/{jobID}/view', 'jobsController@showJob')->middleware('auth');
 Route::delete('/jobs/{jobID}/delete', 'jobsController@deleteJob')->middleware('can:access');
+Route::post('/jobs/{jobID}/apply', 'jobsController@apply');
+Route::get('/jobs/search', 'jobsController@search');
+Route::get('/jobs/searchResults', 'jobsController@showSearchResults');
+
 
 Route::get('/home', 'HomeController@index')->name('home');

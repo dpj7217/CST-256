@@ -235,24 +235,9 @@
 
     <!-- FRIENDS SECTION -->
     <div id="followers_section">
-        <table class="table table-hover table-striped">
-            <thead>
-                <tr>
-                    <th>Username</th>
-                    <th>Name</th>
-                    <th>Active User?</th>
-                    <th>Site Admin?</th>
-                </tr>
-            </thead>
-            @foreach($followers as $user)
-                <tr>
-                    <td><a href="{{url('/profile/' . $user->id . '/view')}}">{{$user->username}}</a></td>
-                    <td>{{$user->name}}</td>
-                    <td>{{$user->isActive ? 'Yes' : ''}}</td>
-                    <td>{{$user->isAdmin ? 'Yes' : ''}}</td>
-                </tr>
-            @endforeach
-        </table>
+        @foreach($followers as $user)
+
+        @endforeach
     </div>
 
 

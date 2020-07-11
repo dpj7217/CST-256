@@ -16,6 +16,8 @@ class CreateJobsTable extends Migration
         Schema::create('jobs', function (Blueprint $table) {
             $table->id();
             $table->string('title');
+            $table->unsignedBigInteger('user_id'); //creator of the job
+            $table->unsignedBigInteger('company_id');
             $table->text('description');
             $table->string('department');
             $table->boolean('isRemote')->nullable();
@@ -25,6 +27,9 @@ class CreateJobsTable extends Migration
             $table->integer('jobType'); //intern, entry, experienced, senior, c-level
             $table->text('otherRequirements')->nullable();
             $table->timestamps();
+
+            $table->foreign('company_id')->references('id')->on('companies')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

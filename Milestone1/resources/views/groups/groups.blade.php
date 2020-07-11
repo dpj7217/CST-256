@@ -3,30 +3,32 @@
 @section('title', 'Groups')
 
 @section('content')
-    @if ($userGroups->count())
-        My Groups <hr>
+    @if($user)
+        @if ($userGroups->count())
+            My Groups <hr>
 
-        @foreach($userGroups->chunk(3) as $chunk)
-            <div class="my-card-group">
-                @foreach($chunk as $group)
-                    <div class="my-card">
-                        <img class="my-card-image" src="{{$group->profileImage}}" alt="card Image">
-                        <div class="my-card-body">
-                            <p>{{$group->bio}}</p>
+            @foreach($userGroups->chunk(3) as $chunk)
+                <div class="my-card-group">
+                    @foreach($chunk as $group)
+                        <div class="my-card">
+                            <img class="my-card-image" src="{{$group->profileImage}}" alt="card Image">
+                            <div class="my-card-body">
+                                <p>{{$group->bio}}</p>
+                            </div>
+                            <hr>
+                            <div class="my-card-body">
+                                <a href="{{url('/group/' . $group->id . '/view')}}" class="btn button">View Group</a>
+                            </div>
+                            <div class="my-card-footer">
+                                <p class="text-muted">Edited on: {{$group->updated_at}}</p>
+                            </div>
                         </div>
-                        <hr>
-                        <div class="my-card-body">
-                            <a href="{{url('/group/' . $group->id . '/view')}}" class="btn button">View Group</a>
-                        </div>
-                        <div class="my-card-footer">
-                            <p class="text-muted">Edited on: {{$group->updated_at}}</p>
-                        </div>
-                    </div>
-                @endforeach
-            </div>
-        @endforeach
-        <hr>
-        <br><br>
+                    @endforeach
+                </div>
+            @endforeach
+            <hr>
+            <br><br>
+        @endif
     @endif
 
     All Available Groups <hr>

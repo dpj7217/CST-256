@@ -17,9 +17,10 @@ use Intervention\Image\ImageManagerStatic as Image;
 
 class ProfileController extends Controller
 {
+    /*/profile/{userID}/create*/
     public function create($userID) {
-        if ($result = Profile::where('user_id', $userID)->first()) {
-            return redirect('/profile/' . $userID . "/edit");
+        if (\Auth::user()->profile && \Auth::user()->profile->demographics) {
+            return redirect('/profile/' . $userID . "/workHistory");
         }
 
         return view('createDemoInfo', [
@@ -27,15 +28,14 @@ class ProfileController extends Controller
         ]);
     }
 
+    /*profile/{userID}/workHistory*/
     public function showWorkHistory($userID) {
         if (!(Profile::where('user_id', $userID))) {
             return redirect('/profile/' . $userID . '/create')->with('error', "Please submit demographic information before entering job history");
         }
 
         //if you've already submitted
-        if (jobHistories::where('profile_id', function($query) use ($userID) {
-            $query->select('id')->from('profiles')->where('user_id', $userID);
-        })->first()) {
+        if (\Auth::user()->profile->jobHistories) {
             return redirect('/profile/' . $userID . "/educationHistories");
         } else {
             return view('createWorkHistory', [
@@ -44,14 +44,13 @@ class ProfileController extends Controller
         }
     }
 
+    /*/profile/{userID}/educationHistories*/
     public function showEducationHistory($userID) {
        if (!(Profile::where('user_id', $userID))) {
            return redirect('/profile/' . $userID . "/create")->with('error', "Please submit demographic information before entering education history");
        }
 
-       if (educationHistories::where('profile_id', function($query) use ($userID){
-           $query->select('id')->from('profiles')->where('user_id', $userID);
-       })->first()) {
+       if ( \Auth::user()->profile->educationHistories) {
            return redirect('/profile/' . $userID . '/view');
        } else {
            return view('createEducationHistory', [
@@ -95,6 +94,9 @@ class ProfileController extends Controller
         /*insert into profiles table and get id*/
         \DB::beginTransaction();
 
+        Profile::create([
+            'user_id' => \Auth::user()->id
+        ]);
 
         $bannerImage = $request->file('bannerImage');
         $bannerImage = Image::make($bannerImage->getRealPath());
@@ -106,19 +108,8 @@ class ProfileController extends Controller
         $profileImage->resize(100, null, function($constraint) {$constraint->aspectRatio();})->encode('jpg', 100);
         \Storage::disk('public')->put('images/' . $userID . '_profileImg.jpg', $profileImage);
 
-
-        $profile = Profile::create([
-            'user_id' => request('userID')
-        ]);
-
-        if (!$profile) {
-            \DB::rollback();
-            return redirect()->back()->withInput()->with('error', 'Failed to add profile');
-        }
-
-
         $demographics = Demographics::create([
-            'profile_id' => $profile->id,
+            'profile_id' => \Auth::user()->profile->id,
             'birthday' => request('birthday'),
             'currentCity' => request('currCity'),
             'fromCity' => request('fromCity'),
@@ -181,7 +172,7 @@ class ProfileController extends Controller
         }
 
         $jobHistory = jobHistories::create([
-            'profile_id' => \Auth::user()->id
+            'profile_id' => \Auth::user()->profile->id
         ]);
 
         $isCurrent = 0;
