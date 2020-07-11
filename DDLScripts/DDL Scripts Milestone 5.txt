@@ -1,0 +1,357 @@
+-- MySQL Workbench Forward Engineering
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
+
+-- -----------------------------------------------------
+-- Schema mydb
+-- -----------------------------------------------------
+-- -----------------------------------------------------
+-- Schema socialis
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Schema socialis
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `socialis` DEFAULT CHARACTER SET utf8 ;
+USE `socialis` ;
+
+-- -----------------------------------------------------
+-- Table `socialis`.`companies`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `socialis`.`companies` (
+  `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `companyName` VARCHAR(255) NOT NULL,
+  `companyImageLocation` VARCHAR(255) NOT NULL,
+  `created_at` TIMESTAMP NULL DEFAULT NULL,
+  `updated_at` TIMESTAMP NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `companies_companyname_unique` (`companyName` ASC))
+ENGINE = InnoDB
+AUTO_INCREMENT = 3
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_unicode_ci;
+
+
+-- -----------------------------------------------------
+-- Table `socialis`.`users`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `socialis`.`users` (
+  `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(255) NOT NULL,
+  `email` VARCHAR(255) NOT NULL,
+  `username` VARCHAR(255) NOT NULL,
+  `password` VARCHAR(255) NOT NULL,
+  `isAdmin` INT(11) NOT NULL,
+  `isActive` INT(11) NOT NULL,
+  `created_at` TIMESTAMP NULL DEFAULT NULL,
+  `updated_at` TIMESTAMP NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `users_email_unique` (`email` ASC),
+  UNIQUE INDEX `users_username_unique` (`username` ASC))
+ENGINE = InnoDB
+AUTO_INCREMENT = 3
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_unicode_ci;
+
+
+-- -----------------------------------------------------
+-- Table `socialis`.`jobs`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `socialis`.`jobs` (
+  `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `title` VARCHAR(255) NOT NULL,
+  `user_id` BIGINT(20) UNSIGNED NOT NULL,
+  `company_id` BIGINT(20) UNSIGNED NOT NULL,
+  `description` TEXT NOT NULL,
+  `department` VARCHAR(255) NOT NULL,
+  `isRemote` TINYINT(1) NULL DEFAULT NULL,
+  `startingSalary` BIGINT(20) UNSIGNED NOT NULL,
+  `yearsExperience` INT(11) NULL DEFAULT NULL,
+  `degreeNeeded` INT(11) NULL DEFAULT NULL,
+  `jobType` INT(11) NOT NULL,
+  `otherRequirements` TEXT NULL DEFAULT NULL,
+  `created_at` TIMESTAMP NULL DEFAULT NULL,
+  `updated_at` TIMESTAMP NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `jobs_company_id_foreign` (`company_id` ASC),
+  INDEX `jobs_user_id_foreign` (`user_id` ASC),
+  CONSTRAINT `jobs_company_id_foreign`
+    FOREIGN KEY (`company_id`)
+    REFERENCES `socialis`.`companies` (`id`)
+    ON DELETE CASCADE,
+  CONSTRAINT `jobs_user_id_foreign`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `socialis`.`users` (`id`)
+    ON DELETE CASCADE)
+ENGINE = InnoDB
+AUTO_INCREMENT = 4
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_unicode_ci;
+
+
+-- -----------------------------------------------------
+-- Table `socialis`.`applications`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `socialis`.`applications` (
+  `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `user_id` BIGINT(20) UNSIGNED NOT NULL,
+  `job_id` BIGINT(20) UNSIGNED NOT NULL,
+  `created_at` TIMESTAMP NULL DEFAULT NULL,
+  `updated_at` TIMESTAMP NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `applications_user_id_foreign` (`user_id` ASC),
+  INDEX `applications_job_id_foreign` (`job_id` ASC),
+  CONSTRAINT `applications_job_id_foreign`
+    FOREIGN KEY (`job_id`)
+    REFERENCES `socialis`.`jobs` (`id`)
+    ON DELETE CASCADE,
+  CONSTRAINT `applications_user_id_foreign`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `socialis`.`users` (`id`)
+    ON DELETE CASCADE)
+ENGINE = InnoDB
+AUTO_INCREMENT = 3
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_unicode_ci;
+
+
+-- -----------------------------------------------------
+-- Table `socialis`.`profiles`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `socialis`.`profiles` (
+  `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `user_id` BIGINT(20) UNSIGNED NOT NULL,
+  `created_at` TIMESTAMP NULL DEFAULT NULL,
+  `updated_at` TIMESTAMP NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `profiles_user_id_unique` (`user_id` ASC),
+  INDEX `profiles_user_id_index` (`user_id` ASC),
+  CONSTRAINT `profiles_user_id_foreign`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `socialis`.`users` (`id`)
+    ON DELETE CASCADE)
+ENGINE = InnoDB
+AUTO_INCREMENT = 2
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_unicode_ci;
+
+
+-- -----------------------------------------------------
+-- Table `socialis`.`demographics`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `socialis`.`demographics` (
+  `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `profile_id` BIGINT(20) UNSIGNED NOT NULL,
+  `profileImageLocation` VARCHAR(255) NOT NULL,
+  `bannerImageLocation` VARCHAR(255) NOT NULL,
+  `age` INT(11) NOT NULL,
+  `gender` VARCHAR(255) NULL DEFAULT NULL,
+  `race` VARCHAR(255) NULL DEFAULT NULL,
+  `fromCity` VARCHAR(255) NOT NULL,
+  `currentCity` VARCHAR(255) NOT NULL,
+  `birthday` DATE NOT NULL,
+  `bio` TEXT NOT NULL,
+  `created_at` TIMESTAMP NULL DEFAULT NULL,
+  `updated_at` TIMESTAMP NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `demographics_profile_id_foreign` (`profile_id` ASC),
+  CONSTRAINT `demographics_profile_id_foreign`
+    FOREIGN KEY (`profile_id`)
+    REFERENCES `socialis`.`profiles` (`id`)
+    ON DELETE CASCADE)
+ENGINE = InnoDB
+AUTO_INCREMENT = 2
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_unicode_ci;
+
+
+-- -----------------------------------------------------
+-- Table `socialis`.`education_histories`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `socialis`.`education_histories` (
+  `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `profile_id` BIGINT(20) UNSIGNED NOT NULL,
+  `created_at` TIMESTAMP NULL DEFAULT NULL,
+  `updated_at` TIMESTAMP NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `education_histories_profile_id_foreign` (`profile_id` ASC),
+  CONSTRAINT `education_histories_profile_id_foreign`
+    FOREIGN KEY (`profile_id`)
+    REFERENCES `socialis`.`profiles` (`id`)
+    ON DELETE CASCADE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_unicode_ci;
+
+
+-- -----------------------------------------------------
+-- Table `socialis`.`education_histories_details`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `socialis`.`education_histories_details` (
+  `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `education_histories_id` BIGINT(20) UNSIGNED NOT NULL,
+  `institutionName` VARCHAR(255) NOT NULL,
+  `major` VARCHAR(255) NOT NULL,
+  `current` TINYINT(1) NULL DEFAULT NULL,
+  `from` DATE NOT NULL,
+  `to` DATE NOT NULL,
+  `created_at` TIMESTAMP NULL DEFAULT NULL,
+  `updated_at` TIMESTAMP NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `education_histories_details_education_histories_id_foreign` (`education_histories_id` ASC),
+  CONSTRAINT `education_histories_details_education_histories_id_foreign`
+    FOREIGN KEY (`education_histories_id`)
+    REFERENCES `socialis`.`education_histories` (`id`)
+    ON DELETE CASCADE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_unicode_ci;
+
+
+-- -----------------------------------------------------
+-- Table `socialis`.`failed_jobs`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `socialis`.`failed_jobs` (
+  `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `connection` TEXT NOT NULL,
+  `queue` TEXT NOT NULL,
+  `payload` LONGTEXT NOT NULL,
+  `exception` LONGTEXT NOT NULL,
+  `failed_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_unicode_ci;
+
+
+-- -----------------------------------------------------
+-- Table `socialis`.`groups`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `socialis`.`groups` (
+  `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `user_id` BIGINT(20) UNSIGNED NOT NULL,
+  `name` VARCHAR(255) NOT NULL,
+  `bannerImage` VARCHAR(255) NOT NULL,
+  `profileImage` VARCHAR(255) NOT NULL,
+  `bio` TEXT NOT NULL,
+  `isPublic` TINYINT(1) NOT NULL,
+  `isJoinable` TINYINT(1) NOT NULL,
+  `isActive` TINYINT(1) NOT NULL,
+  `created_at` TIMESTAMP NULL DEFAULT NULL,
+  `updated_at` TIMESTAMP NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `groups_name_unique` (`name` ASC),
+  INDEX `groups_user_id_foreign` (`user_id` ASC),
+  CONSTRAINT `groups_user_id_foreign`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `socialis`.`users` (`id`)
+    ON DELETE CASCADE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_unicode_ci;
+
+
+-- -----------------------------------------------------
+-- Table `socialis`.`group_user`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `socialis`.`group_user` (
+  `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `user_id` BIGINT(20) UNSIGNED NOT NULL,
+  `group_id` BIGINT(20) UNSIGNED NOT NULL,
+  `created_at` TIMESTAMP NULL DEFAULT NULL,
+  `updated_at` TIMESTAMP NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `group_user_user_id_group_id_unique` (`user_id` ASC, `group_id` ASC),
+  INDEX `group_user_group_id_foreign` (`group_id` ASC),
+  CONSTRAINT `group_user_group_id_foreign`
+    FOREIGN KEY (`group_id`)
+    REFERENCES `socialis`.`groups` (`id`)
+    ON DELETE CASCADE,
+  CONSTRAINT `group_user_user_id_foreign`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `socialis`.`users` (`id`)
+    ON DELETE CASCADE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_unicode_ci;
+
+
+-- -----------------------------------------------------
+-- Table `socialis`.`job_histories`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `socialis`.`job_histories` (
+  `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `profile_id` BIGINT(20) UNSIGNED NOT NULL,
+  `created_at` TIMESTAMP NULL DEFAULT NULL,
+  `updated_at` TIMESTAMP NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `job_histories_profile_id_unique` (`profile_id` ASC),
+  INDEX `job_histories_profile_id_index` (`profile_id` ASC),
+  CONSTRAINT `job_histories_profile_id_foreign`
+    FOREIGN KEY (`profile_id`)
+    REFERENCES `socialis`.`profiles` (`id`)
+    ON DELETE CASCADE)
+ENGINE = InnoDB
+AUTO_INCREMENT = 4
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_unicode_ci;
+
+
+-- -----------------------------------------------------
+-- Table `socialis`.`job_histories_details`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `socialis`.`job_histories_details` (
+  `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `job_histories_id` BIGINT(20) UNSIGNED NOT NULL,
+  `companyName` VARCHAR(255) NOT NULL,
+  `role` VARCHAR(255) NOT NULL,
+  `description` TEXT NOT NULL,
+  `current` TINYINT(1) NULL DEFAULT NULL,
+  `from` DATE NOT NULL,
+  `to` DATE NOT NULL,
+  `created_at` TIMESTAMP NULL DEFAULT NULL,
+  `updated_at` TIMESTAMP NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `job_histories_details_job_histories_id_foreign` (`job_histories_id` ASC),
+  CONSTRAINT `job_histories_details_job_histories_id_foreign`
+    FOREIGN KEY (`job_histories_id`)
+    REFERENCES `socialis`.`job_histories` (`id`)
+    ON DELETE CASCADE)
+ENGINE = InnoDB
+AUTO_INCREMENT = 2
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_unicode_ci;
+
+
+-- -----------------------------------------------------
+-- Table `socialis`.`migrations`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `socialis`.`migrations` (
+  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `migration` VARCHAR(255) NOT NULL,
+  `batch` INT(11) NOT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 15
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_unicode_ci;
+
+
+-- -----------------------------------------------------
+-- Table `socialis`.`password_resets`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `socialis`.`password_resets` (
+  `email` VARCHAR(255) NOT NULL,
+  `token` VARCHAR(255) NOT NULL,
+  `created_at` TIMESTAMP NULL DEFAULT NULL,
+  INDEX `password_resets_email_index` (`email` ASC))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_unicode_ci;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
