@@ -138,6 +138,7 @@ a {
     font-family: "Lucida Sans", "monospace", sans-serif;
     font-size: 15px;
     height: 5%;
+    padding-top: 5px;
 }
 
 .profileNavItem {
@@ -150,7 +151,7 @@ a {
 .profileNavItem:hover {
     color: #0f3b0f;
     background-color: white;
-    padding: auto;
+    padding-top: 5px;
 }
 
 .button {

@@ -61,7 +61,7 @@ Route::get('/profile/{userID}/workHistory', 'profileController@showWorkHistory')
 Route::post('/workHistory/{userID}/create', 'profileController@addWorkHistory')->middleware('auth');
 Route::get('/profile/{userID}/educationHistories', 'profileController@showEducationHistory')->middleware('auth');
 Route::post('/profile/{userID}/educationHistories', 'profileController@addEducationHistory')->middleware('auth');
-Route::get('/profile/{userID}/view', 'profileController@show');
+Route::get('/profile/{userID}/view', 'profileController@show')->middleware('auth');
 
 Route::get('/admin/users', 'adminController@showUsers')->middleware('can:access');
 Route::patch('/users/suspend', 'adminController@suspendUser')->middleware('can:access');
@@ -81,5 +81,7 @@ Route::post('/jobs/{jobID}/apply', 'jobsController@apply');
 Route::get('/jobs/search', 'jobsController@search');
 Route::get('/jobs/searchResults', 'jobsController@showSearchResults');
 
+Route::resource('/userAPI', 'userAPI');
+Route::resource('/jobAPI', 'jobAPI');
 
 Route::get('/home', 'HomeController@index')->name('home');

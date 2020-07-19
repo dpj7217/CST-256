@@ -18,11 +18,11 @@
 
     <div class="form-row">
         <div class="form-group col-6">
-            <label for="from_r">From</label>
+            <label for="from_r">Start Date</label>
             <input type="date" name="from1" id="from_r" class="form-control">
         </div>
         <div class="form-group col-6">
-            <label for="to_r">From</label>
+            <label for="to_r">End Date</label>
             <input type="date" name="to1" id="to_r" class="form-control">
         </div>
     </div>

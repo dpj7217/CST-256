@@ -30,7 +30,7 @@ class ProfileController extends Controller
 
     /*profile/{userID}/workHistory*/
     public function showWorkHistory($userID) {
-        if (!(Profile::where('user_id', $userID))) {
+        if (!(\Auth::user()->profile->demographics)) {
             return redirect('/profile/' . $userID . '/create')->with('error', "Please submit demographic information before entering job history");
         }
 
@@ -46,7 +46,7 @@ class ProfileController extends Controller
 
     /*/profile/{userID}/educationHistories*/
     public function showEducationHistory($userID) {
-       if (!(Profile::where('user_id', $userID))) {
+       if (!(\Auth::user()->profile->demographics)) {
            return redirect('/profile/' . $userID . "/create")->with('error', "Please submit demographic information before entering education history");
        }
 
@@ -60,13 +60,31 @@ class ProfileController extends Controller
     }
 
     public function show($userID) {
+        $user = User::find($userID);
+
+        if (!$user)
+            return redirect('/')->with('errorMsg', "There is no user with that user ID");
+
+        $demographics = null;
+        $educationHistory = null;
+        $workHistory = null;
+
+        if ($condition = $user->profile->demographics)
+            $demographics = $condition;
+
+        if ($user->profile->educationHistories)
+            $educationHistory = $user->profile->educationHistories->educationHistoriesDetails->all();
+
+        if ($user->profile->jobHistories)
+            $workHistory = $user->profile->jobHistories->jobHistoriesDetails->all();
+
         return view('profile/profile', [
-            'user' => User::find($userID),
-            'profile' => User::where('id', $userID)->first()->profile,
-            'demographics' => User::where('id', $userID)->first()->profile->demographics,
-            'educationHistories' => User::where('id', $userID)->first()->profile->educationHistories->educationHistoriesDetails,
-            'workHistory' => User::where('id', $userID)->first()->profile->jobHistories->jobHistoriesDetails,
-            'groups' => User::where('id', $userID)->first()->groups,
+            'user' => $user,
+            'profile' => $user->profile,
+            'demographics' => $demographics,
+            'educationHistory' => $educationHistory,
+            'workHistory' => $workHistory,
+            'groups' => $user->groups,
             'userID' => $userID
         ]);
     }
@@ -93,10 +111,6 @@ class ProfileController extends Controller
 
         /*insert into profiles table and get id*/
         \DB::beginTransaction();
-
-        Profile::create([
-            'user_id' => \Auth::user()->id
-        ]);
 
         $bannerImage = $request->file('bannerImage');
         $bannerImage = Image::make($bannerImage->getRealPath());

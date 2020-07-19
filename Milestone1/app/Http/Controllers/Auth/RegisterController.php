@@ -73,6 +73,10 @@ class RegisterController extends Controller
             'isActive' => 1
         ]);
 
+        \App\Profile::create([
+            'user_id' => $user->id
+        ]);
+
         return $user;
     }
 }

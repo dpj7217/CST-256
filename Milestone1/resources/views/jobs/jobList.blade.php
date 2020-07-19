@@ -101,7 +101,7 @@
                     @endcan
                 </tr>
             @empty
-                <h3 id="missingJobs">Looks like you don't have any jobs yet, add one to see it here</h3>
+                <h3 id="missingJobs">No one is hiring right now. Come back later and try again</h3>
             @endforelse
         </tbody>
     </table>
