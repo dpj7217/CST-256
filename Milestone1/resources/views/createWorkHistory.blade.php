@@ -101,7 +101,7 @@
             </div>
         @endif
 
-            <form action="{{url('/workHistory/' . $userID . "/create")}}" method="POST" id="historyForm">
+            <form action="{{url('/profile/' . $userID . "/workHistory")}}" method="POST" id="historyForm">
             @csrf
 
 

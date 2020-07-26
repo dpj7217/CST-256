@@ -56,11 +56,14 @@ Route::get('/logout', 'Auth\loginController@logout');
 
 
 Route::get('/profile/{userID}/create', 'profileController@create')->middleware('auth');
-Route::post('/profile/{userID}/create', 'profileController@addDemographics')->middleware('auth');
-Route::get('/profile/{userID}/workHistory', 'profileController@showWorkHistory')->middleware('auth');
-Route::post('/workHistory/{userID}/create', 'profileController@addWorkHistory')->middleware('auth');
-Route::get('/profile/{userID}/educationHistories', 'profileController@showEducationHistory')->middleware('auth');
-Route::post('/profile/{userID}/educationHistories', 'profileController@addEducationHistory')->middleware('auth');
+Route::post('/profile/{userID}/create', 'profileController@store')->middleware('auth');
+Route::patch('/profile/{userID}/edit', 'profileController@edit')->middleware('auth');
+Route::get('/profile/{userID}/workHistory', 'WorkHistoryController@show')->middleware('auth');
+Route::post('/profile/{userID}/workHistory', 'WorkHistoryController@store')->middleware('auth');
+Route::patch('/profile/{userID}/workHistory/edit', 'WorkHistoryController@edit')->middleware('auth');
+Route::get('/profile/{userID}/educationHistories', 'EducationHistoryController@show')->middleware('auth');
+Route::post('/profile/{userID}/educationHistories', 'EducationHistoryController@store')->middleware('auth');
+Route::patch('/profile/{userID}/educationHistories/edit', 'EducationHistoryController@edit');
 Route::get('/profile/{userID}/view', 'profileController@show')->middleware('auth');
 
 Route::get('/admin/users', 'adminController@showUsers')->middleware('can:access');
@@ -83,5 +86,11 @@ Route::get('/jobs/searchResults', 'jobsController@showSearchResults');
 
 Route::resource('/userAPI', 'userAPI');
 Route::resource('/jobAPI', 'jobAPI');
+
+Route::post('/post/create', 'postController@store')->middleware('auth');
+
+Route::post('/comment/{post_id}/create', 'CommentController@create')->middleware('auth');
+
+Route::post('/like/{post_id}/create', 'LikeController@create')->middleware('auth');
 
 Route::get('/home', 'HomeController@index')->name('home');
